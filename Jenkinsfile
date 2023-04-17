@@ -1,30 +1,27 @@
-rtMaven.tool = 'Maven3'
 pipeline {
-  agent any
-  {
-    jdk "JAVA11"
-    maven "Maven3"
-  }
-  stages {
-    stage('Code Checkout') {
-      steps {
-        checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/devops81/mavenjavatest.git']]])
-      }
+    agent any
+    tools {
+        maven 'MAVEN3'
+        jdk 'JAVA11'
     }
-
-    stage('Build') {
-      steps {
-        script {
-        rtMaven.run pom: 'pom.xml',goals: 'clean install' 
+    stages {
+        stage("Tools initialization") {
+            steps {
+                sh "mvn --version"
+                sh "java -version"
+            }
         }
-      }
-    }
-
-    stage('Notify') {
-      steps {
-        sh 'echo "This is build notfication step"'
-      }
-    }
-
-  }
-}
+        stage("Checkout Code") {
+            steps {
+                git branch: 'master',
+                url: "https://github.com/devops81/mavenjavatest.git"
+            }
+        }
+        stage("Building Application") {
+            steps {
+               sh "mvn clean install"
+            }
+        }
+        
+           }
+        }

@@ -29,7 +29,7 @@ pipeline {
             }
         }
         
-           }
+           
     stage ('Scan and Build Jar File') {
             steps {
                withSonarQubeEnv(installationName: 'sonarqubeserver', credentialsId: 'sonarqube-token') {
